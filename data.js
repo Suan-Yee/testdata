@@ -131,25 +131,25 @@ function renderTable(filteredProject = null, filteredCompany = null, isFilter = 
             row.style.borderTop = '1px solid #add8e6';
 
             let rowCtx = `
-                <td class="br-1 align-top blue" style="width:60px">&nbsp; ${ge.ENVIRONMENT} &nbsp;</td>
+                <td class="br-1 align-top blue" style="width:60px">&nbsp; ${ENVIRONMENT} &nbsp;</td>
                 <td class="br-1 align-top blue" style="text-align:center">
-                    ${ge.WEB_RUNNING && ge.AP_RUNNING ? "<span class='running'>Running</span>" : "<span class='stopped'>Stopped</span>"}
+                    ${WEB_RUNNING && AP_RUNNING ? "<span class='running'>Running</span>" : "<span class='stopped'>Stopped</span>"}
                 </td>
-                <td class="br-1 align-top blue" style="width:305px">&nbsp; ${ge.WEBSERVER} - ${ge.APSERVER} - ${ge.DBSERVER} &nbsp;</td>
-                <td class="br-1 align-top blue" style="width:324px">&nbsp; ${ge.PJ || 'なし'} &nbsp;</td>
-                <td class="br-1 align-top blue">&nbsp; ${companyNames[ge.COMPANY]} &nbsp;</td>
-                <td class="br-1 align-top blue">&nbsp; ${ge.WEBPORT} &nbsp; ${ge.WEB_RUNNING ? "<span class='running'>Running</span>" : "<span class='stopped'>Stopped</span>"} <br>
+                <td class="br-1 align-top blue" style="width:305px">&nbsp; ${WEBSERVER} - ${APSERVER} - ${DBSERVER} &nbsp;</td>
+                <td class="br-1 align-top blue" style="width:324px">&nbsp; ${PJ || 'なし'} &nbsp;</td>
+                <td class="br-1 align-top blue">&nbsp; ${companyNames[COMPANY]} &nbsp;</td>
+                <td class="br-1 align-top blue">&nbsp; ${WEBPORT} &nbsp; ${WEB_RUNNING ? "<span class='running'>Running</span>" : "<span class='stopped'>Stopped</span>"} <br>
             `;
 
-            envinfo[ge.COMPANY] && (
-                Object.entries(envinfo[ge.COMPANY]).forEach(([key, value], i) => {
-                    let span = Object.entries(envinfo[ge.COMPANY]).filter(([key, value]) => value !== null).length + envinfo[ge.COMPANY]["管理者"].length - 1;
+            envinfo[COMPANY] && (
+                Object.entries(envinfo[COMPANY]).forEach(([key, value], i) => {
+                    let span = Object.entries(envinfo[COMPANY]).filter(([key, value]) => value !== null).length + envinfo[COMPANY]["管理者"].length - 1;
                     if (value !== null) {
                         if (key === '管理者') {
                             value.forEach(v => {
                                 rowCtx += `
                                     <span class="tooltip">&nbsp;&nbsp;
-                                        <a href="${ge.WEBBASEURL}${v}" target='blank'> ${ge.WEB_RUNNING ? `<span class="red small">(${key})</span>` : `<span class="red small">(${key})</span>`} </a>
+                                        <a href="${WEBBASEURL}${v}" target='blank'> ${WEB_RUNNING ? `<span class="red small">(${key})</span>` : `<span class="red small">(${key})</span>`} </a>
                                         <span class="tooltiptext">Click to see details for ${key}</span>&nbsp;&nbsp;
                                     </span><br>
                                 `;
@@ -157,7 +157,7 @@ function renderTable(filteredProject = null, filteredCompany = null, isFilter = 
                         } else {
                             rowCtx += `
                                 <span class="tooltip">&nbsp;&nbsp;
-                                    <a href="${ge.WEBBASEURL}${value}" target='blank'> ${ge.WEB_RUNNING ? `<span class="red small">(${key}) </span> `:` <span class="red small">(${key})</span>`} </a>
+                                    <a href="${WEBBASEURL}${value}" target='blank'> ${WEB_RUNNING ? `<span class="red small">(${key}) </span> `:` <span class="red small">(${key})</span>`} </a>
 									<span class='tooltiptext'>Click to see details for ${key} </span>
 								</span><br>`;
 								}
@@ -165,8 +165,8 @@ function renderTable(filteredProject = null, filteredCompany = null, isFilter = 
 						}));
 						rowCtx = rowCtx + `
     </td>
-    <td class='br-1 align-top blue'><a href="${ge.APURL}" target='blank'> ${ge.AP_RUNNING ? `${ge.APPORT}` : `${ge.APPORT}`} ${ge.AP_RUNNING ? "<span class='running'>Running</span>" : "<span class='stopped'>Stopped</span>"} </a></td>
-    <td class='br-1 align-top blue'> ${ge.DBUSER} </td>
+    <td class='br-1 align-top blue'><a href="${APURL}" target='blank'> ${AP_RUNNING ? `${APPORT}` : `${APPORT}`} ${AP_RUNNING ? "<span class='running'>Running</span>" : "<span class='stopped'>Stopped</span>"} </a></td>
+    <td class='br-1 align-top blue'> ${DBUSER} </td>
 `;
 
 rowCtx += `</td>`;

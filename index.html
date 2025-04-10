@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./server2_3.js"></script>
+    <script src="./envinfo.js"></script>
+</head>
+
+<body>
+
+    <div class="table-container">
+        <table id="parentTable">
+            <tr>
+                <!-- <td id="timestamp">&nbsp; ${TIMESTAMP} &nbsp;</td> -->
+            </tr>
+            <tr>
+                <td colspan="8">
+                    <div class="input-container">
+                        <span class="input-box">
+                            <label for="project">PJ:</label>
+                            <select id="project">
+                                <option selected value="option1">全部を表示</option>
+                            </select>
+                        </span>
+                        <span class="input-box">
+                            <label for="company">Company Name:</label>
+                            <select id="company">
+                                <option selected value="option1">全部を表示</option>
+                            </select>
+                        </span>
+                        <span class="input-box">
+                            <button id="btn" type="submit">検索</button>
+                        </span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <table class="innerTable">
+
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <script>
+        const companyNames = {
+            "P0": "対面",
+            "0D": "内藤",
+            "0H": "セゾン",
+            "08": "フィデリティ",
+            "52": "マネックス",
+            "44": "ＳＢＩネオトレード",
+            "0X": "安藤",
+            "0C": "スマートプラス",
+            "0F": "ＯＫＢ",
+            "0G": "第一生命",
+            "46": "大和コネクト",
+            "09": "リテラ・クレア証券",
+            "47": "auアセットマネジメント社直近版"
+        };
+
+        const groupedByEnv = Object.values(server.reduce((acc, obj) => {
+            const env = obj.ENVIRONMENT;
+            acc[env] = acc[env] || [];
+            acc[env].push(obj);
+            return acc;
+        }, {}));
+
+        console.log(groupedByEnv)
+
+        // const timestampCell = document.getElementById('timestamp');
+        // timestampCell.textContent = `${TIMESTAMP}`;
+
+        var dropdownRow = document.createElement("tr");
+
+        const uniqueProjects = new Set();
+
+        function selectedOptions() {
+            groupedByEnv.forEach((g) => {
+                g.forEach((ge) => {
+                    if (ge.PJ) {
+                        let pj_name = ge.PJ.split("<br>")[0];
+                        uniqueProjects.add(pj_name);
+                    }
+                })
+            })
+            const projectOptionDatas = Array.from(uniqueProjects).map((project) => {
+                return `<option value="${project}">&nbsp; ${project} &nbsp;</option>`;
+            }).join('');
+
+            const companyOptionDatas = Object.entries(companyNames).map(([key, name]) => {
+                return `<option value="${key}">&nbsp; ${name} &nbsp;</option>`;
+            }).join('');
+
+            const projectSelect = document.getElementById('project');
+            const companySelect = document.getElementById('company');
+
+            projectSelect.innerHTML += projectOptionDatas;
+            companySelect.innerHTML += companyOptionDatas;
+        }
+        document.getElementById('btn').addEventListener('click', () => {
+            const selectedProject = document.getElementById('project').value;
+            const selectedCompany = document.getElementById('company').value;
+
+            const filteredData = groupedByEnv.map(envGroup => {
+                return envGroup.filter(entry => {
+                    const matchProject = selectedProject === 'option1' || entry.PJ?.startsWith(selectedProject);
+                    const matchCompany = selectedCompany === 'option1' || entry.COMPANY === selectedCompany;
+                    return matchProject && matchCompany;
+                });
+            }).filter(group => group.length > 0);
+
+            const innerTable = document.querySelector('.innerTable');
+            innerTable.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                const noDataRow = document.createElement('tr');
+                noDataRow.innerHTML = `<td colspan="12" style="text-align:center; color:red;">データが見つかりません</td>`;
+                innerTable.appendChild(noDataRow);
+            } else {
+                renderTable(filteredData);
+            }
+        });
+
+        function renderTable(data = groupedByEnv) {
+            const innerTable = document.querySelector('.innerTable');
+            innerTable.innerHTML = ''; 
+            
+            data.forEach((group,groupIndex) => {
+                let lastServer = null;
+
+                const mainHeaderRow = document.createElement('tr');
+                mainHeaderRow.setAttribute("class", "envRow");
+                mainHeaderRow.style.backgroundColor = "#0066cc";
+                mainHeaderRow.style.color = "white";
+                mainHeaderRow.innerHTML = `
+                    <th>ENV</th>
+                    <th>RUNNING</th>
+                    <th>SERVER</th>
+                    <th>PJ</th>
+                    <th>Company Name</th>
+                    <th>WB</th>
+                    <th>AP</th>
+                    <th>DB</th>
+                `;
+                innerTable.appendChild(mainHeaderRow);
+
+                group.forEach((entry,entryIndex) => {
+                    const { APPORT,APSERVER,APURL,AP_RUNNING,COMPANY,DBSERVER,DBUSER,
+                        ENVIRONMENT,PJ,WEBBASEURL,WEBPORT,WEBSERVER,WEB_RUNNING} = entry;
+        
+                    if(entryIndex !== 0 && WEBSERVER !== lastServer) {
+                        const subHeaderRow = document.createElement('tr');
+                        subHeaderRow.innerHTML = `
+                        <th>ENV</th>
+                        <th>RUNNING</th>
+                        <th>SERVER</th>
+                        <th>PJ</th>
+                        <th>Company Name</th>
+                        <th>WB</th>
+                        <th>AP</th>
+                        <th>DB</th>
+                        <th>${entry.WEBSERVER}</th>
+                        <th>${entry.APSERVER}</th>
+                        <th>${entry.DBSERVER}</th>
+                        `;
+                        innerTable.appendChild(subHeaderRow);
+                    }
+                    lastServer = WEBSERVER;
+
+                    const dataRow = document.createElement('tr');
+                    dataRow.style.borderLeft = '1px solid #add8e6';
+                    dataRow.style.borderRight = '1px solid #add8e6';
+                    dataRow.style.borderTop = '1px solid #add8e6';
+
+                    let rowCtx = `
+                    <td class="br-1 align-top blue" style="width:60px">&nbsp; ${ENVIRONMENT} &nbsp;</td>
+                    <td class="br-1 align-top blue" style="text-align:center">
+                        ${WEB_RUNNING && AP_RUNNING ? "<span class='running'>Running</span>" : "<span class='stopped'>Stopped</span>"}
+                    </td>
+                    <td class="br-1 align-top blue" style="width:305px">&nbsp; ${WEBSERVER} - ${APSERVER} - ${DBSERVER} &nbsp;</td>
+                    <td class="br-1 align-top blue" style="width:324px">&nbsp; ${PJ || 'なし'} &nbsp;</td>
+                    <td class="br-1 align-top blue">&nbsp; ${companyNames[COMPANY]} &nbsp;</td>
+                    <td class="br-1 align-top blue">&nbsp; ${WEBPORT} &nbsp; ${WEB_RUNNING ? "<span class='running'>Running</span>" : "<span class='stopped'>Stopped</span>"} <br>
+                `;
+
+                    envinfo[COMPANY] && (
+                        Object.entries(envinfo[COMPANY]).forEach(([key, value], i) => {
+                            let span = Object.entries(envinfo[COMPANY]).filter(([key, value]) => value !== null).length + envinfo[COMPANY]["管理者"].length - 1;
+                            if (value !== null) {
+                                if (key === '管理者') {
+                                    value.forEach(v => {
+                                        rowCtx += `
+                                            <span class="tooltip">&nbsp;&nbsp;
+                                                <a href="${WEBBASEURL}${v}" target='blank'> ${WEB_RUNNING ? `<span class="red small">(${key})</span>` : `<span class="red small">(${key})</span>`} </a>
+                                                <span class="tooltiptext">Click to see details for ${key}</span>&nbsp;&nbsp;
+                                            </span><br>
+                                        `;
+                                    });
+                                } else {
+                                    rowCtx += `
+                                        <span class="tooltip">&nbsp;&nbsp;
+                                            <a href="${WEBBASEURL}${value}" target='blank'> ${WEB_RUNNING ? `<span class="red small">(${key}) </span> `:` <span class="red small">(${key})</span>`} </a>
+                                            <span class='tooltiptext'>Click to see details for ${key} </span>
+                                        </span><br>`;
+                                        }
+                                    }
+                                }));
+                                rowCtx = rowCtx + `
+                    </td>
+                    <td class='br-1 align-top blue'><a href="${APURL}" target='blank'> ${AP_RUNNING ? `${APPORT}` : `${APPORT}`} ${AP_RUNNING ? "<span class='running'>Running</span>" : "<span class='stopped'>Stopped</span>"} </a></td>
+                    <td class='br-1 align-top blue'> ${DBUSER} </td>
+                    `;
+                    rowCtx += `</td>`;
+                    dataRow.innerHTML = rowCtx;    
+                    innerTable.appendChild(dataRow)
+                });
+                const endRow = document.createElement('tr');
+                innerTable.appendChild(endRow)
+
+            })
+
+
+            console.log(innerTable)
+        }
+        selectedOptions();
+        renderTable();
+
+    </script>
+</body>
+
+</html>

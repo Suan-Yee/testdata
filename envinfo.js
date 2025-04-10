@@ -97,10 +97,4 @@ const envinfo = {
         "リッチ投資家": "rc/test_client/RcLogin.jsp",
         "リッチオペレータ": "rc/test_client/cc_login.jsp"
     },
-    "0F": {
-        "投資家": "0F/pc/WEB3AccountLogin.jsp",
-        "オペレータ": "0F/pc/WEB3OperatorLogin.jsp",
-        "管理者": [
-            "0F/admin/WEB3AdminLogin.jsp"
-        ],
-        "対面":
+}
