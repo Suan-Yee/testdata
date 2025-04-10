@@ -1,0 +1,60 @@
+const server = [
+    {
+        "ENVIRONMENT": "w3st",
+        "WEBSERVER": "w3stwb12",
+        "WEB_RUNNING": true,
+        "APSERVER": "w3stap12",
+        "AP_RUNNING": true,
+        "WEBPORT": "jboss01wb:8590",
+        "APPORT": "wb390ap:3499:7090",
+        "DBSERVER": "",
+        "DBUSER": "st3290",
+        "COMPANY": "0H",
+        "WEBBASEURL": "リンク http://172.16.112.141:8590/webbroker3/",
+        "APURL": "リンク http://172.16.113.14:7090/web3/xFun/data/xFunTestCheckInp.jsp",
+        "PJ": "(0H)BaaS対応実施に伴う原状回復対応<br>2025/01/29~2025/03/31<br>担当者：竹田"
+    },
+    {
+        "ENVIRONMENT": "w3st",
+        "WEBSERVER": "w3stwb12",
+        "WEB_RUNNING": true,
+        "APSERVER": "w3stap12",
+        "AP_RUNNING": true,
+        "WEBPORT": "jboss02wb:8690",
+        "APPORT": "wb390ap:3500:7090",
+        "DBSERVER": "",
+        "DBUSER": "st3290",
+        "COMPANY": "0H",
+        "WEBBASEURL": "リンク http://172.16.112.141:8690/webbroker3/",
+        "APURL": "リンク http://172.16.113.14:7090/web3/xFun/data/xFunTestCheckInp.jsp",
+        "PJ": "(0H)BaaS対応実施に伴う原状回復対応<br>2025/01/29~2025/03/31<br>担当者：竹田"
+    },
+    {
+        "ENVIRONMENT": "w3st",
+        "WEBSERVER": "w3stwb12",
+        "WEB_RUNNING": false,
+        "APSERVER": "w3ntap12",
+        "AP_RUNNING": true,
+        "WEBPORT": "jboss03wb:8090",
+        "APPORT": "wb390ap:3001:7090",
+        "DBSERVER": "",
+        "DBUSER": "st3290",
+        "COMPANY": "0D",
+        "WEBBASEURL": "リンク http://172.16.112.141:8090/webbroker3/",
+        "APURL": "リンク http://172.16.113.14:7090/web3/xFun/data/xFunTestCheckInp.jsp"
+    },
+    {
+        "ENVIRONMENT": "w3st",
+        "WEBSERVER": "w3stwb12",
+        "WEB_RUNNING": false,
+        "APSERVER": "w3stap12",
+        "AP_RUNNING": false,
+        "WEBPORT": "jboss04wb:8090",
+        "APPORT": "jboss04ap:3501:7090",
+        "DBSERVER": "w3stdb12",
+        "DBUSER": "wb30x1",
+        "COMPANY": "0X",
+        "WEBBASEURL": "リンク http://172.16.112.141:8090/webbroker3/",
+        "APURL": "リンク http://172.16.112.145:7090/web3/xFun/data/xFunTestCheckInp.jsp"
+    }
+];
